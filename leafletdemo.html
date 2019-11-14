@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Leaflet Essential</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+            integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" 
+            crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+            integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+            crossorigin="">
+        </script>
+        <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+    </head>
+    <body>
+        <div id="map" style="width:600px; height:610px;"></div>
+        <script>
+            // Stamen Title Layer as baselayer
+            var baselayer = new L.StamenTileLayer("terrain");
+            // 
+            var dtla = new L.latLng({lat:33.954372,lon:-118.376021});
+            // Create a map object called mymap
+            var mymap = new L.Map('map',
+            {
+                //Setup mymap's attributes
+                center: dtla,
+                zoom: 9
+            });
+            // Add baselayer to mymap
+            mymap.addLayer(baselayer);
+            
+            
+
+ 
+        </script>
+    </body>
+</html>
