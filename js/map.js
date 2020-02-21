@@ -65,6 +65,16 @@ var lapoverity = L.geoJson(lapoverity_geocode, {
 
 overlayMaps["LA Poverty"] = lapoverity;
 
+// LA 17-18 Fiscal Year
+var fiscalyr_geocode = getfiscalyrlayer();
+var fiscalyr = L.geoJson(fiscalyr_geocode, {
+    style: style
+});
+
+// Add 17-18 Fiscal Year to overlayMaps
+overlayMaps["17-18"] = fiscalyr;
+
+
 // center map to downtown los angeles 
 var dtla = new L.latLng({ lat: 33.954372, lon: -118.376021 });
 
@@ -83,27 +93,57 @@ var baseMaps = {
     "Toner": toner,
 };
 
-L.control.layers(baseMaps, overlayMaps).addTo(mymap);
+
+var lcontrol = L.control.layers(baseMaps, overlayMaps).addTo(mymap);
 
 // Create Legend
 var legend = L.control({
+    // position legend to be bottom left of the map
     position: 'bottomleft'
 });
 
 legend.onAdd = getLegendContent;
 
-//   Add Legend to Map
-legend.addTo(mymap);
-
-
 function getLegendContent(map) {
     var div = L.DomUtil.create('div', 'info legend'),
-        population = [0, 10, 100, 1000, 10000, 100000, 1000000],
+        population = [0,10,50,100,150,200,250,300],
         labels = [];
 
     // loop through our density intervals and generate a lobal with a colored sqaure for each interval
     for (var i = 0; i < population.length; i++) {
-        div.innerHTML += population[i] + '<br>';
+        div.innerHTML += 
+            '<div id=legend><i style="background:'+ getColor(population[i]) + '"></i>' + population[i] + '&ndash;' + (population[i + 1] ? population[i + 1] + '<br>' : '+') + '</div>';
     }
     return div;
 }
+
+// Used to create clusters of marker
+var markers = L.markerClusterGroup();
+
+// load json data
+const data = homeenergyimprovementdata;
+
+// Loop through data and create a marker for each longitude and latitude
+// Load marker into cluster
+for(item of data){
+    const marker = L.marker(new L.LatLng(item.y,item.x));
+    markers.addLayer(marker);
+}
+// Add clusters layer to map
+mymap.addLayer(markers);
+
+// When LA Zipcode is selected turn on Legend
+mymap.on('overlayadd', function(eventLayer){
+    if(eventLayer.name === '17-18'){
+        mymap.addControl(legend);
+    }
+});
+
+// When LA Zipcode is deselected turn off Legend
+mymap.on('overlayremove', function(eventLayer){
+    if(eventLayer.name === '17-18'){
+        mymap.removeControl(legend);
+    }
+});
+
+
